@@ -1,19 +1,24 @@
 import Stripe from "stripe"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
+import { NextApiRequest , NextApiResponse } from "next"
 
 import prismadb from "@/lib/prismadb"
 import { stripe } from "@/lib/stripe"
+import getRawBody from "raw-body"
 
-export async function POST(req: Request) {
-  const body = await req.text()
+export async function POST(
+  request : NextApiRequest,
+  response : NextApiResponse
+) {
+  const rawbody = await getRawBody(request);
   const signature = headers().get("stripe-signature") as string
 
   let event: Stripe.Event
 
   try {
     event = stripe.webhooks.constructEvent(
-      body,
+      rawbody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     )
@@ -64,4 +69,10 @@ export async function POST(req: Request) {
   }
 
   return new NextResponse(null, { status: 200 })
+};
+
+export const config = {
+  api :{
+    bodyParser: false,
+  },
 };
