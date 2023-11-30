@@ -50,7 +50,7 @@ const VideoPage = () => {
         toast.error("Something went wrong. Please try again later.");
       }
     } finally {
-      // router.refresh();
+      router.refresh();
     }
   };
 
