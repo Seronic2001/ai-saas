@@ -37,7 +37,9 @@ const VideoPage = () => {
     try {
       setVideo(undefined);
 
-      axios.post("/api/video", values).then((res) => setVideo(res.data[0]));
+      const response = await axios.post("/api/video", values);
+
+      setVideo(response.data[0]);
       form.reset();
 
     } catch (error: any) {
@@ -48,7 +50,7 @@ const VideoPage = () => {
         toast.error("Something went wrong. Please try again later.");
       }
     } finally {
-      //router.refresh();
+      // router.refresh();
     }
   };
 
